@@ -1,12 +1,29 @@
-# Somerville City Council Flowchart
+# How an Item Moves Through Somerville City Council
 
-This is (an attempt at) a flowchart showing selected procedural state changes for work items in the [Somerville, MA City Council](https://www.somervillema.gov/departments/city-council).
+This flowchart shows selected procedural state changes for work items in the [Somerville, MA City Council](https://www.somervillema.gov/departments/city-council).
+
+## How to read the chart
+
+Start at the top and follow the arrows between numbered sections. Lettered panels pull committee work and Council reconsideration or override procedures aside so the main paths are easier to scan. The numbering is a reading aid; it does not mean every item passes through every section.
+
+The colors preserve the original chart's categories:
+
+- **Teal**: sources where items originate.
+- **Blue**: key lifecycle steps.
+- **Gold**: seldom-used steps.
+- **Green**: positive status developments.
+- **Orange**: intermediate status developments.
+- **Red**: negative status developments.
+
+Dashed arrows visually de-emphasize loops, returns, and cross-stage routes. They do not imply a different legal effect or degree of certainty.
+
+Pill-shaped labels beginning with `↩` or `→` point to an existing state elsewhere in the chart. They replace long backward or cross-chart arrows for readability; they are not additional procedural states.
 
 ## Caveats
 
 Note there are many simplifications here!
 
-This is also a first attempt to capture how things work. It's not meant to be comprehensive.
+This is not meant to be comprehensive.
 
 That said, if you see errors or have suggestions, please let me know! Contact info is below.
 
@@ -20,25 +37,17 @@ submit a pull request!
 ## Please note
 
 This is a self-acknowledged City Council-centric view of things! This is NOT supposed
-to represent an over summary of decision-making. It's purely to help orient people
+to represent an overall summary of decision-making. It's purely to help orient people
 to the procedures in and surrounding the City Council.
-
-## FAQ
-
-Q. Why is this chart so annoyingly laid out?
-
-A. Mermaid.js is a rendering library that generates a chart image automatically, with the source file only defining nodes and their relationships. On the minus side, it makes
-for charts that are hard to read. On the plus side, you don't spend forever fiddling with
-the layout.
 
 ## Contact
 
 Questions? Comments?
 
-Open an issue here in Github, or email me, Ben Wheeler, at bwheeler@somervillema.gov .
+Open an issue here in GitHub, or email me, Ben Wheeler, at bwheeler@somervillema.gov.
 
 ## Rendering
 
-[View flowchart (raw SVG)](https://raw.githubusercontent.com/benjiwheeler/somerville-city-council-flowchart/main/flowchart.svg)
+[View flowchart (raw SVG)](https://raw.githubusercontent.com/r00k/somerville-city-council-flowchart/main/flowchart.svg)
 
-![Flowchart rendering](https://raw.githubusercontent.com/benjiwheeler/somerville-city-council-flowchart/main/flowchart.svg)
+![Flowchart rendering](https://raw.githubusercontent.com/r00k/somerville-city-council-flowchart/main/flowchart.svg)

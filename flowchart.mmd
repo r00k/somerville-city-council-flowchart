@@ -1,122 +1,158 @@
 ---
+title: How an item moves through Somerville City Council
 config:
-  theme: neutral
+  fontFamily: "Avenir Next, Segoe UI, Helvetica Neue, Arial, sans-serif"
+  theme: base
+  look: classic
   layout: elk
   elk:
     mergeEdges: false
     nodePlacementStrategy: NETWORK_SIMPLEX
-
+  flowchart:
+    htmlLabels: true
+    useMaxWidth: false
+    nodeSpacing: 52
+    rankSpacing: 76
+    padding: 20
+  themeVariables:
+    background: "#F7FAFC"
+    fontFamily: "Avenir Next, Segoe UI, Helvetica Neue, Arial, sans-serif"
+    fontSize: "17px"
+    lineColor: "#5B7080"
+    textColor: "#17324D"
+    primaryTextColor: "#17324D"
+    clusterBkg: "#FFFFFF"
+    clusterBorder: "#C8D5DE"
+    edgeLabelBackground: "#F7FAFC"
 ---
-stateDiagram
-  direction TB
-  classDef statusNeg fill:#f9f2f4,stroke:#b80f0a,stroke-width:2px,color:#b80f0a;
-  classDef statusMid fill:#ffee99,stroke:#ee8833,stroke-width:2px,color:#ee8833;
-  classDef statusPos fill:#f0fff0,stroke:#0fb80a,stroke-width:2px,color:#0fb80a;
-  classDef origins fill:#f5fff5,stroke:#113311,stroke-width:2px,color:#113311;
-  classDef secondary fill:#ffffdd,stroke:#997733,stroke-width:2px,color:#997733;
-  classDef keySteps fill:#ddeeff,stroke:#224477,stroke-width:2px,color:#224477;
+flowchart TB
+  subgraph Entry["1 · SOURCES"]
+    direction LR
+    Councilors(["Councilors"])
+    PublicComment(["Public comment"])
+    AdminNeeds(["Admin needs and<br/>statutory requirements"])
+  end
 
-  state City_Council {
-    Councilors
-    On_Council_Agenda:On Council agenda
-    Discussion
-    Decision:Decision
-    Decision:Vote, or presumed unanimity at discretion of Chair
-    Decision:(any Councilor may call for vote instead)
-    Vote_succeeds:Vote succeeds
-    Vote_fails:Vote fails
-    Reconsideration_vote:Reconsideration vote
-    Override_Vote:Override vote
+  subgraph Council["2 · CITY COUNCIL"]
+    direction TB
+    CouncilAgenda["On Council agenda"]
+    Discussion["Discussion"]
+    Decision["Decision<br/>Vote, or presumed unanimity at discretion of Chair<br/>(any Councilor may call for vote instead)"]
+    FloorVote["Vote on ordinance<br/>1st reading needs 2/3<br/>2nd reading only needs majority"]
+    VoteFails["Vote fails"]
+    VoteSucceeds["Vote succeeds"]
+    CouncilAgendaReturn(["↩ On Council agenda"])
 
-    On_Council_Agenda --> Discussion:Reading
-    Discussion --> Reconsideration_vote:Motion to reconsider
-    Discussion --> Decision:Small and routine matters
-    Decision --> On_Council_Agenda:Postpone to specific date
-    Decision --> On_Council_Agenda:Lay on Table until next meeting
-    Discussion --> Floor_vote:Proposed ordinances
-    Reconsideration_vote --> Floor_vote:Reconsideration succeeds
-    Floor_vote:Vote on ordinance
-    Floor_vote:1st reading needs 2/3
-    Floor_vote:2nd reading only needs majority
-    Floor_vote --> Vote_fails
-    Floor_vote --> Vote_succeeds
-    Vote_succeeds --> Reconsideration_vote:Can immediately call for reconsideration
-    Councilors --> On_Council_Agenda:Submit items
-  }
+    CouncilAgenda -->|Reading| Discussion
+    Discussion -->|Small and routine matters| Decision
+    Discussion -->|Proposed ordinances| FloorVote
+    FloorVote --> VoteFails
+    FloorVote --> VoteSucceeds
+    Decision -.->|Postpone to specific date| CouncilAgendaReturn
+    Decision -.->|Lay on Table until next meeting| CouncilAgendaReturn
+  end
 
-  state Committee_Process {
-    In_the_Box:In the box
-    To_Be_Reported:To be reported
-    On_Committee_Agenda:On committee agenda
+  subgraph Committee["A · COMMITTEE"]
+    direction TB
+    InTheBox["In the box"]
+    CommitteeAgenda["On committee agenda"]
+    ToBeReported["To be reported"]
+    CommitteeBoxReturn(["↩ In the box"])
+    CommitteeAgendaReturn(["↩ On Council agenda"])
 
-    In_the_Box --> On_Committee_Agenda:Scheduled by Chair
-    On_Committee_Agenda --> To_Be_Reported:Approved
-    On_Committee_Agenda --> In_the_Box:Lay on Table (indefinitely)
-    On_Committee_Agenda --> In_the_Box:Discussed (no decision)
-    On_Committee_Agenda --> To_Be_Reported:Not Approved
-    On_Committee_Agenda --> To_Be_Reported:Report Without Recommendation
-  }
+    InTheBox -->|Scheduled by Chair| CommitteeAgenda
+    CommitteeAgenda -->|Approved| ToBeReported
+    CommitteeAgenda -->|Not Approved| ToBeReported
+    CommitteeAgenda -->|Report Without Recommendation| ToBeReported
+    CommitteeAgenda -.->|"Lay on Table (indefinitely)"| CommitteeBoxReturn
+    CommitteeAgenda -.->|"Discussed (no decision)"| CommitteeBoxReturn
+    ToBeReported --> CommitteeAgendaReturn
+  end
 
-  state Clerks_custody {
-    Waiting_period:Waiting period
-  }
+  subgraph Reconsideration["B · COUNCIL RECONSIDERS"]
+    direction TB
+    ReconsiderationVote["Reconsideration vote"]
+    ReconsiderationSuccess(["↩ Vote on ordinance"])
+    ReconsiderationFailNonOrdinance(["→ Approved"])
+    ReconsiderationFailOrdinance(["→ Presented to Mayor"])
 
-  state Public {
-    Public_comment:Public comment
-  }
+    ReconsiderationVote -->|Reconsideration succeeds| ReconsiderationSuccess
+    ReconsiderationVote -->|"Reconsideration fails (non-ordinance)"| ReconsiderationFailNonOrdinance
+    ReconsiderationVote -->|"Reconsideration fails (ordinance)"| ReconsiderationFailOrdinance
+  end
 
-  state Administration {
-    Presented_to_Mayor:Presented to Mayor
-    Vetoed_by_Mayor:Vetoed by Mayor
-    Presented_to_Mayor --> Vetoed_by_Mayor:Mayor objects
-    Needs_and_statutory_requirements:Admin needs and statutory requirements
-  }
+  subgraph Clerk["3 · CLERK'S CUSTODY"]
+    direction TB
+    WaitingPeriod["Waiting period"]
+  end
 
-  state Terminal_States {
-    Approved
-    Adopted_Enacted:Enacted
-    Defeated_cannot_be_reintroduced:Defeated, cannot be reintroduced for period
-    No_longer_active_can_be_reintroduced:No longer active, but can be reintroduced whenever
-  }
+  subgraph Administration["4 · ADMINISTRATION"]
+    direction TB
+    PresentedToMayor["Presented to Mayor"]
+    VetoedByMayor["Vetoed by Mayor"]
 
-  state Legend {
-    legend_origin:Source where items originate
-    legend_secondary:Seldom used steps
-    legend_key:Key steps in lifecycle of an item
-    legend_status_pos:Positive development in status
-    legend_status_mid:Mid development in status
-    legend_status_neg:Negative development in status
-  }
+    PresentedToMayor -->|Mayor objects| VetoedByMayor
+  end
 
-  Needs_and_statutory_requirements --> On_Council_Agenda:Item requests
-  To_Be_Reported --> On_Council_Agenda
-  Public_comment --> On_Council_Agenda
+  subgraph CouncilOverride["C · COUNCIL OVERRIDE"]
+    direction TB
+    OverrideVote["Override vote"]
+  end
 
-  On_Council_Agenda --> In_the_Box:Referred to Committee
-  On_Committee_Agenda --> No_longer_active_can_be_reintroduced:Mark work completed
-  Committee_Process --> No_longer_active_can_be_reintroduced:End of Term
-  Decision --> No_longer_active_can_be_reintroduced:Place on File
+  subgraph Results["5 · TERMINAL STATES"]
+    direction LR
+    Approved["Approved"]
+    Enacted["Enacted"]
+    Inactive["No longer active,<br/>but can be reintroduced whenever"]
+    Defeated["Defeated, cannot be<br/>reintroduced for period"]
+  end
 
-  Vote_fails --> Defeated_cannot_be_reintroduced
-  Vote_succeeds --> Waiting_period:Vote succeeds (ordinance)
-  Waiting_period --> Presented_to_Mayor:No one files for reconsideration (ordinance)
-  Waiting_period --> Approved:No one files for reconsideration (non-ordinance)
-  Waiting_period --> Reconsideration_vote:Someone in majority files for reconsideration
-  Reconsideration_vote --> Approved:Reconsideration fails (non-ordinance)
-  Reconsideration_vote --> Presented_to_Mayor:Reconsideration fails (ordinance)
-  Presented_to_Mayor --> Adopted_Enacted:Signed or 10 Days Pass
-  Vetoed_by_Mayor --> Override_Vote:Council can attempt to override veto
-  Override_Vote --> Adopted_Enacted:Override succeeds
-  Override_Vote --> Defeated_cannot_be_reintroduced:Override fails
+  Councilors -->|Submit items| CouncilAgenda
+  PublicComment --> CouncilAgenda
+  AdminNeeds -->|Item requests| CouncilAgenda
 
-  Clerks_custody:Clerk's custody
-  Committee_Process:Committee
-  City_Council:City Council
-  Terminal_States:Terminal states
+  CouncilAgenda -->|Referred to Committee| InTheBox
+  Discussion -.->|Motion to reconsider| ReconsiderationVote
+  VoteSucceeds -.->|Can immediately call for reconsideration| ReconsiderationVote
 
-  class legend_status_neg,Defeated_cannot_be_reintroduced,Vote_fails,Vetoed_by_Mayor statusNeg
-  class legend_status_mid,No_longer_active_can_be_reintroduced statusMid
-  class legend_status_pos,Adopted_Enacted,Approved,Vote_succeeds statusPos
-  class legend_origin,Councilors,Public_comment,Needs_and_statutory_requirements origins
-  class legend_secondary,Override_Vote,Reconsideration_vote secondary
-  class legend_key,Decision,Discussion,On_Council_Agenda,Floor_vote,On_Committee_Agenda,In_the_Box,To_Be_Reported,Presented_to_Mayor,Waiting_period keySteps
+  VoteFails --> Defeated
+  VoteSucceeds -->|"Vote succeeds (ordinance)"| WaitingPeriod
+
+  WaitingPeriod -->|"No one files for reconsideration (ordinance)"| PresentedToMayor
+  WaitingPeriod -->|"No one files for reconsideration (non-ordinance)"| Approved
+  WaitingPeriod -.->|Someone in majority files for reconsideration| ReconsiderationVote
+  PresentedToMayor -->|Signed or 10 Days Pass| Enacted
+  VetoedByMayor -->|Council can attempt to override veto| OverrideVote
+  OverrideVote -->|Override succeeds| Enacted
+  OverrideVote -->|Override fails| Defeated
+
+  Decision -.->|Place on File| Inactive
+  CommitteeAgenda -.->|Mark work completed| Inactive
+  Committee -.->|End of Term| Inactive
+
+  classDef source fill:#E5F4F1,stroke:#24756D,stroke-width:2px,color:#164E4A;
+  classDef key fill:#EAF2F7,stroke:#315B70,stroke-width:2px,color:#17324D;
+  classDef secondary fill:#FFF4D6,stroke:#B7791F,stroke-width:2px,color:#6B4708;
+  classDef connector fill:#FFFFFF,stroke:#7B8791,stroke-width:1.5px,color:#4D5A64;
+  classDef positive fill:#E6F4EA,stroke:#2F7D4A,stroke-width:3px,color:#205B37;
+  classDef mid fill:#FFF0E0,stroke:#C1692F,stroke-width:2px,color:#7A3E18;
+  classDef negative fill:#FBE9E7,stroke:#B74C3C,stroke-width:3px,color:#8A3026;
+
+  class Councilors,PublicComment,AdminNeeds source;
+  class CouncilAgenda,Discussion,Decision,FloorVote,InTheBox,CommitteeAgenda,ToBeReported,WaitingPeriod,PresentedToMayor key;
+  class ReconsiderationVote,OverrideVote secondary;
+  class CouncilAgendaReturn,CommitteeBoxReturn,CommitteeAgendaReturn,ReconsiderationSuccess,ReconsiderationFailNonOrdinance,ReconsiderationFailOrdinance connector;
+  class VoteSucceeds,Approved,Enacted positive;
+  class Inactive mid;
+  class VoteFails,VetoedByMayor,Defeated negative;
+
+  style Entry fill:#F4FAF8,stroke:#AFCFC8,stroke-width:1px,color:#164E4A;
+  style Council fill:#F8FBFD,stroke:#B8CAD6,stroke-width:1px,color:#17324D;
+  style Committee fill:#FFFCF4,stroke:#DEC78D,stroke-width:1px,color:#6B4708;
+  style Reconsideration fill:#FFFCF4,stroke:#DEC78D,stroke-width:1px,color:#6B4708;
+  style Clerk fill:#F8FBFD,stroke:#B8CAD6,stroke-width:1px,color:#17324D;
+  style Administration fill:#F8FBFD,stroke:#B8CAD6,stroke-width:1px,color:#17324D;
+  style CouncilOverride fill:#FFFCF4,stroke:#DEC78D,stroke-width:1px,color:#6B4708;
+  style Results fill:#FFFFFF,stroke:#B8CAD6,stroke-width:1px,color:#17324D;
+
+  linkStyle default stroke:#5B7080,stroke-width:1.8px;
