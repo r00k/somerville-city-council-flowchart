@@ -1,0 +1,3 @@
+{
+  "themeCSS": ".labelBkg, .cluster-label span p { background-color: #F7FAFC !important; } .cluster-label span p { padding: 0 4px; } .cluster-label { position: relative; z-index: 2; } .edgePaths { position: relative; z-index: 1; }"
+}

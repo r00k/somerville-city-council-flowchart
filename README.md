@@ -24,5 +24,5 @@ This independent visual redesign is maintained by [r00k](https://github.com/r00k
 The editable Mermaid source is [`flowchart.mmd`](./flowchart.mmd). Regenerate the SVG with:
 
 ```sh
-npx -y @mermaid-js/mermaid-cli -i flowchart.mmd -o flowchart.svg -b transparent
+npx -y @mermaid-js/mermaid-cli -i flowchart.mmd -o flowchart.svg -b transparent -c mermaid-config.json && node postprocess-svg.mjs flowchart.svg
 ```
