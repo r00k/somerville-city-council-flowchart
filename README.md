@@ -1,55 +1,43 @@
-# How an Item Moves Through Somerville City Council
+# Somerville City Council Item Flowchart
 
-This flowchart shows selected procedural state changes for work items in the [Somerville, MA City Council](https://www.somervillema.gov/departments/city-council).
+A visual guide to selected procedural state changes for items before the [Somerville, Massachusetts City Council](https://www.somervillema.gov/departments/city-council).
 
-This repository builds on [Ben Wheeler's original Somerville City Council flowchart](https://github.com/benjiwheeler/somerville-city-council-flowchart). Thank you to Ben for creating and sharing the original chart.
+**[Open the full-size chart](https://raw.githubusercontent.com/r00k/somerville-city-council-flowchart/main/flowchart.svg)**
 
-## How to read the chart
+[![Somerville City Council item flowchart](./flowchart.svg)](https://raw.githubusercontent.com/r00k/somerville-city-council-flowchart/main/flowchart.svg)
 
-Start at the top and follow the arrows between numbered sections. Lettered panels pull committee work and Council reconsideration or override procedures aside so the main paths are easier to scan. The numbering is a reading aid; it does not mean every item passes through every section.
+## About this version
 
-The colors preserve the original chart's categories:
+This project builds on [Ben Wheeler's original flowchart](https://github.com/benjiwheeler/somerville-city-council-flowchart). Thank you to Ben for creating and sharing it.
 
-- **Teal**: sources where items originate.
-- **Blue**: key lifecycle steps.
-- **Gold**: seldom-used steps.
-- **Green**: positive status developments.
-- **Orange**: intermediate status developments.
-- **Red**: negative status developments.
+The original chart was treated as authoritative for procedural content. This version preserves its transitions, conditions, vote thresholds, and outcomes while reorganizing the presentation to make the paths easier to scan.
 
-Dashed arrows visually de-emphasize loops, returns, and cross-stage routes. They do not imply a different legal effect or degree of certainty.
+## Reading the chart
 
-Pill-shaped labels beginning with `↩` or `→` point to an existing state elsewhere in the chart. They replace long backward or cross-chart arrows for readability; they are not additional procedural states.
+- Numbered sections provide a reading order; not every item passes through every section.
+- Lettered panels separate committee work and Council reconsideration or override procedures from the main path.
+- Dashed arrows de-emphasize loops, returns, and cross-stage routes. They do not indicate a different legal effect or degree of certainty.
+- Pills beginning with `↩` or `→` refer to an existing state elsewhere in the chart; they are not additional procedural states.
 
-## Caveats
+Colors retain the original chart's categories:
 
-Note there are many simplifications here!
+| Color | Meaning |
+| --- | --- |
+| Teal | Source where an item originates |
+| Blue | Key lifecycle step |
+| Gold | Seldom-used step |
+| Green | Positive status development |
+| Orange | Intermediate status development |
+| Red | Negative status development |
 
-This is not meant to be comprehensive.
+## Scope
 
-That said, if you see errors or have suggestions, please let me know! Contact info is below.
+This is a simplified, City Council-centric orientation aid—not a comprehensive account of municipal decision-making.
 
-## To edit
+## Editing and rendering
 
-If you want to play with this and alter it to your liking, try going to: https://www.mermaidchart.com and pasting in the content of this project's flowchart.mmd file.
+The editable source is [`flowchart.mmd`](./flowchart.mmd). To regenerate the SVG with Mermaid CLI:
 
-If you come up with something you like, please send it to me, or fork this repository and
-submit a pull request!
-
-## Please note
-
-This is a self-acknowledged City Council-centric view of things! This is NOT supposed
-to represent an overall summary of decision-making. It's purely to help orient people
-to the procedures in and surrounding the City Council.
-
-## Contact
-
-Questions? Comments?
-
-Open an issue here in GitHub, or email me, Ben Wheeler, at bwheeler@somervillema.gov.
-
-## Rendering
-
-[View flowchart (raw SVG)](https://raw.githubusercontent.com/r00k/somerville-city-council-flowchart/main/flowchart.svg)
-
-![Flowchart rendering](https://raw.githubusercontent.com/r00k/somerville-city-council-flowchart/main/flowchart.svg)
+```sh
+npx -y @mermaid-js/mermaid-cli -i flowchart.mmd -o flowchart.svg -b transparent
+```
