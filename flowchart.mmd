@@ -26,15 +26,23 @@ config:
     edgeLabelBackground: "#F7FAFC"
 ---
 flowchart TB
-  subgraph Entry["1 · SOURCES"]
-    direction LR
+  %% Headings are nodes so ELK routes arrows around their text.
+  %% The ~~~ constraints place them without adding procedural transitions.
+  subgraph Entry[" "]
+    direction TB
+    EntryTitle["<b>1 · SOURCES</b>"]
     Councilors(["Councilors"])
     PublicComment(["Public comment"])
     AdminNeeds(["Admin needs and<br/>statutory requirements"])
+
+    EntryTitle ~~~ Councilors
+    EntryTitle ~~~ PublicComment
+    EntryTitle ~~~ AdminNeeds
   end
 
-  subgraph Council["2 · CITY COUNCIL"]
+  subgraph Council[" "]
     direction TB
+    CouncilTitle["<b>2 · CITY COUNCIL</b>"]
     CouncilAgenda["On Council agenda"]
     Discussion["Discussion"]
     Decision["Decision<br/>Vote, or presumed unanimity at discretion of Chair<br/>(any Councilor may call for vote instead)"]
@@ -43,6 +51,7 @@ flowchart TB
     VoteSucceeds["Vote succeeds"]
     CouncilAgendaReturn(["↩ On Council agenda"])
 
+    CouncilTitle ~~~ CouncilAgenda
     CouncilAgenda -->|Reading| Discussion
     Discussion -->|Small and routine matters| Decision
     Discussion -->|Proposed ordinances| FloorVote
@@ -52,14 +61,16 @@ flowchart TB
     Decision -.->|Lay on Table until next meeting| CouncilAgendaReturn
   end
 
-  subgraph Committee["A · COMMITTEE"]
+  subgraph Committee[" "]
     direction TB
+    CommitteeTitle["<b>A · COMMITTEE</b>"]
     InTheBox["In the box"]
     CommitteeAgenda["On committee agenda"]
     ToBeReported["To be reported"]
     CommitteeBoxReturn(["↩ In the box"])
     CommitteeAgendaReturn(["↩ On Council agenda"])
 
+    CommitteeTitle ~~~ InTheBox
     InTheBox -->|Scheduled by Chair| CommitteeAgenda
     CommitteeAgenda -->|Approved| ToBeReported
     CommitteeAgenda -->|Not Approved| ToBeReported
@@ -69,42 +80,58 @@ flowchart TB
     ToBeReported --> CommitteeAgendaReturn
   end
 
-  subgraph Reconsideration["B · COUNCIL RECONSIDERS"]
+  subgraph Reconsideration[" "]
     direction TB
+    ReconsiderationTitle["<b>B · COUNCIL RECONSIDERS</b>"]
     ReconsiderationVote["Reconsideration vote"]
     ReconsiderationSuccess(["↩ Vote on ordinance"])
     ReconsiderationFailNonOrdinance(["→ Approved"])
     ReconsiderationFailOrdinance(["→ Presented to Mayor"])
 
+    ReconsiderationTitle ~~~ ReconsiderationVote
     ReconsiderationVote -->|Reconsideration succeeds| ReconsiderationSuccess
     ReconsiderationVote -->|"Reconsideration fails (non-ordinance)"| ReconsiderationFailNonOrdinance
     ReconsiderationVote -->|"Reconsideration fails (ordinance)"| ReconsiderationFailOrdinance
   end
 
-  subgraph Clerk["3 · CLERK'S CUSTODY"]
+  subgraph Clerk[" "]
     direction TB
+    ClerkTitle["<b>3 · CLERK'S CUSTODY</b>"]
     WaitingPeriod["Waiting period"]
+
+    ClerkTitle ~~~ WaitingPeriod
   end
 
-  subgraph Administration["4 · ADMINISTRATION"]
+  subgraph Administration[" "]
     direction TB
+    AdministrationTitle["<b>4 · ADMINISTRATION</b>"]
     PresentedToMayor["Presented to Mayor"]
     VetoedByMayor["Vetoed by Mayor"]
 
+    AdministrationTitle ~~~ PresentedToMayor
     PresentedToMayor -->|Mayor objects| VetoedByMayor
   end
 
-  subgraph CouncilOverride["C · COUNCIL OVERRIDE"]
+  subgraph CouncilOverride[" "]
     direction TB
+    CouncilOverrideTitle["<b>C · COUNCIL OVERRIDE</b>"]
     OverrideVote["Override vote"]
+
+    CouncilOverrideTitle ~~~ OverrideVote
   end
 
-  subgraph Results["5 · TERMINAL STATES"]
-    direction LR
+  subgraph Results[" "]
+    direction TB
+    ResultsTitle["<b>5 · TERMINAL STATES</b>"]
     Approved["Approved"]
     Enacted["Enacted"]
     Inactive["No longer active,<br/>but can be reintroduced whenever"]
     Defeated["Defeated, cannot be<br/>reintroduced for period"]
+
+    ResultsTitle ~~~ Approved
+    ResultsTitle ~~~ Enacted
+    ResultsTitle ~~~ Inactive
+    ResultsTitle ~~~ Defeated
   end
 
   Councilors -->|Submit items| CouncilAgenda
@@ -134,6 +161,10 @@ flowchart TB
   classDef key fill:#EAF2F7,stroke:#315B70,stroke-width:2px,color:#17324D;
   classDef secondary fill:#FFF4D6,stroke:#B7791F,stroke-width:2px,color:#6B4708;
   classDef connector fill:#FFFFFF,stroke:#7B8791,stroke-width:1.5px,color:#4D5A64;
+  classDef sourceTitle fill:#F4FAF8,stroke-width:0px,color:#164E4A;
+  classDef keyTitle fill:#F8FBFD,stroke-width:0px,color:#17324D;
+  classDef secondaryTitle fill:#FFFCF4,stroke-width:0px,color:#6B4708;
+  classDef resultTitle fill:#FFFFFF,stroke-width:0px,color:#17324D;
   classDef positive fill:#E6F4EA,stroke:#2F7D4A,stroke-width:3px,color:#205B37;
   classDef mid fill:#FFF0E0,stroke:#C1692F,stroke-width:2px,color:#7A3E18;
   classDef negative fill:#FBE9E7,stroke:#B74C3C,stroke-width:3px,color:#8A3026;
@@ -142,6 +173,10 @@ flowchart TB
   class CouncilAgenda,Discussion,Decision,FloorVote,InTheBox,CommitteeAgenda,ToBeReported,WaitingPeriod,PresentedToMayor key;
   class ReconsiderationVote,OverrideVote secondary;
   class CouncilAgendaReturn,CommitteeBoxReturn,CommitteeAgendaReturn,ReconsiderationSuccess,ReconsiderationFailNonOrdinance,ReconsiderationFailOrdinance connector;
+  class EntryTitle sourceTitle;
+  class CouncilTitle,ClerkTitle,AdministrationTitle keyTitle;
+  class CommitteeTitle,ReconsiderationTitle,CouncilOverrideTitle secondaryTitle;
+  class ResultsTitle resultTitle;
   class VoteSucceeds,Approved,Enacted positive;
   class Inactive mid;
   class VoteFails,VetoedByMayor,Defeated negative;
@@ -156,3 +191,5 @@ flowchart TB
   style Results fill:#FFFFFF,stroke:#B8CAD6,stroke-width:1px,color:#17324D;
 
   linkStyle default stroke:#5B7080,stroke-width:1.8px;
+  %% Keep the heading-only ~~~ constraints invisible.
+  linkStyle 0,1,2,3,11,19,23,24,26,27,28,29,30 stroke:transparent,stroke-width:0px,fill:none;
