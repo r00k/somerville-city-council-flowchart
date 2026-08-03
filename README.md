@@ -2,6 +2,8 @@
 
 This flowchart shows selected procedural state changes for work items in the [Somerville, MA City Council](https://www.somervillema.gov/departments/city-council).
 
+This repository builds on [Ben Wheeler's original Somerville City Council flowchart](https://github.com/benjiwheeler/somerville-city-council-flowchart). Thank you to Ben for creating and sharing the original chart.
+
 ## How to read the chart
 
 Start at the top and follow the arrows between numbered sections. Lettered panels pull committee work and Council reconsideration or override procedures aside so the main paths are easier to scan. The numbering is a reading aid; it does not mean every item passes through every section.
